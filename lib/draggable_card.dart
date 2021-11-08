@@ -13,6 +13,7 @@ class DraggableCard extends StatefulWidget {
   final Function(double distance)? onSlideUpdate;
   final Function(SlideRegion? slideRegion)? onSlideRegionUpdate;
   final Function(SlideDirection? direction)? onSlideOutComplete;
+  late final bool? draggableTop;
 
   DraggableCard(
       {this.card,
@@ -20,7 +21,8 @@ class DraggableCard extends StatefulWidget {
       this.onSlideUpdate,
       this.onSlideOutComplete,
       this.slideTo,
-      this.onSlideRegionUpdate});
+      this.onSlideRegionUpdate,
+      this.draggableTop});
 
   @override
   _DraggableCardState createState() => _DraggableCardState();
@@ -200,7 +202,7 @@ class _DraggableCardState extends State<DraggableCard>
         slideRegion = isInLeftRegion
             ? SlideRegion.inNopeRegion
             : SlideRegion.inLikeRegion;
-      } else if (isInTopRegion) {
+      } else if (isInTopRegion && widget.draggableTop == true) {
         slideRegion = SlideRegion.inSuperLikeRegion;
       } else {
         slideRegion = null;
@@ -234,7 +236,7 @@ class _DraggableCardState extends State<DraggableCard>
 
         slideOutDirection =
             isInLeftRegion ? SlideDirection.left : SlideDirection.right;
-      } else if (isInTopRegion) {
+      } else if (isInTopRegion && widget.draggableTop == true) {
         slideOutTween = Tween(
             begin: cardOffset, end: dragVector * (2 * context.size!.height));
         slideOutAnimation.forward(from: 0.0);

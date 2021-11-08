@@ -8,12 +8,14 @@ class SwipeCards extends StatefulWidget {
   final IndexedWidgetBuilder itemBuilder;
   final MatchEngine matchEngine;
   final Function onStackFinished;
+  late final bool? draggableTop;
 
-  const SwipeCards(
+  SwipeCards(
       {Key? key,
       required this.matchEngine,
       required this.onStackFinished,
-      required this.itemBuilder})
+      required this.itemBuilder,
+      required this.draggableTop})
       : super(key: key);
 
   @override
@@ -129,15 +131,15 @@ class _SwipeCardsState extends State<SwipeCards> {
   }
 
   SlideDirection? _desiredSlideOutDirection() {
-    switch (widget.matchEngine.currentItem!.decision) {
-      case Decision.nope:
-        return SlideDirection.left;
-      case Decision.like:
-        return SlideDirection.right;
-      case Decision.superLike:
-        return SlideDirection.up;
-      default:
-        return null;
+    if (widget.matchEngine.currentItem!.decision == Decision.nope) {
+      return SlideDirection.left;
+    } else if (widget.matchEngine.currentItem!.decision == Decision.superLike &&
+        widget.draggableTop == true) {
+      return SlideDirection.up;
+    } else if (widget.matchEngine.currentItem!.decision == Decision.like) {
+      return SlideDirection.right;
+    } else {
+      return null;
     }
   }
 
@@ -147,11 +149,13 @@ class _SwipeCardsState extends State<SwipeCards> {
       children: <Widget>[
         if (widget.matchEngine.nextItem != null)
           DraggableCard(
+            draggableTop: widget.draggableTop,
             isDraggable: false,
             card: _buildBackCard(),
           ),
         if (widget.matchEngine.currentItem != null)
           DraggableCard(
+            draggableTop: widget.draggableTop,
             card: _buildFrontCard(),
             slideTo: _desiredSlideOutDirection(),
             onSlideUpdate: _onSlideUpdate,
