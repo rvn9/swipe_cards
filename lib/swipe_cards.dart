@@ -8,7 +8,7 @@ class SwipeCards extends StatefulWidget {
   final IndexedWidgetBuilder itemBuilder;
   final MatchEngine matchEngine;
   final Function onStackFinished;
-  late final bool? draggableTop;
+  final bool? draggableTop;
 
   SwipeCards(
       {Key? key,
@@ -131,15 +131,19 @@ class _SwipeCardsState extends State<SwipeCards> {
   }
 
   SlideDirection? _desiredSlideOutDirection() {
-    if (widget.matchEngine.currentItem!.decision == Decision.nope) {
-      return SlideDirection.left;
-    } else if (widget.matchEngine.currentItem!.decision == Decision.superLike &&
-        widget.draggableTop == true) {
-      return SlideDirection.up;
-    } else if (widget.matchEngine.currentItem!.decision == Decision.like) {
-      return SlideDirection.right;
-    } else {
-      return null;
+    switch (widget.matchEngine.currentItem!.decision) {
+      case Decision.nope:
+        return SlideDirection.left;
+      case Decision.like:
+        return SlideDirection.right;
+      case Decision.superLike:
+        if (widget.draggableTop == true) {
+          return SlideDirection.up;
+        } else {
+          return null;
+        }
+      default:
+        return null;
     }
   }
 

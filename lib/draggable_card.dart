@@ -22,7 +22,7 @@ class DraggableCard extends StatefulWidget {
       this.onSlideOutComplete,
       this.slideTo,
       this.onSlideRegionUpdate,
-      this.draggableTop});
+      this.draggableTop = false});
 
   @override
   _DraggableCardState createState() => _DraggableCardState();
